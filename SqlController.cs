@@ -27,7 +27,7 @@ namespace MigrationTool
       SqlCommand cmd = new SqlCommand();
       cmd.Connection = conn;
       cmd.CommandText = query;
-      //cmd.CommandTimeout = timeout;
+      cmd.CommandTimeout = 999999;
       return cmd.ExecuteNonQuery();
     }
   }

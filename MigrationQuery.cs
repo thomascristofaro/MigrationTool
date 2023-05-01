@@ -18,6 +18,8 @@ namespace MigrationTool
     public bool hasCompany { get; set; }
     public MigrationQueryType type { get; set; }
 
+    private Dictionary<string, string> dollarSystem;
+
     public MigrationQuery(int id)
     {
       this.id = id;
@@ -27,18 +29,29 @@ namespace MigrationTool
       company = "";
       hasCompany = false;
       type = MigrationQueryType.NOT_FOUND;
+
+      dollarSystem = new Dictionary<string, string>();
+      dollarSystem.Add("[$systemId]", "[_systemId]");
+      dollarSystem.Add("[$systemCreatedAt]", "[_systemCreatedAt]");
+      dollarSystem.Add("[$systemCreatedBy]", "[_systemCreatedBy]");
+      dollarSystem.Add("[$systemModifiedAt]", "[_systemModifiedAt]");
+      dollarSystem.Add("[$systemModifiedBy]", "[_systemModifiedBy]");
     }
 
     public static MigrationQuery CreateFromRaw(int id, string rawQuery, string companyPlaceholder, Dictionary<string, string> placeholders)
     {
       MigrationQuery q = new MigrationQuery(id);
       q.query = rawQuery;
+
+      q.RemoveDollarSystem();
       q.CheckCompany();
       q.RemoveComment();
       if (q.query.Length <= 0)
         return null;
       q.SetTableAndTypeFromQuery();
       q.ReplacePlaceholders(companyPlaceholder, placeholders);
+      q.InsertDollarSystem();
+
       return q;
     }
 
@@ -103,6 +116,19 @@ namespace MigrationTool
           RegexOptions.IgnoreCase);
       }
     }
+
+    private void RemoveDollarSystem()
+    {
+      foreach (var entry in dollarSystem)
+        query = Regex.Replace(query, Regex.Escape(entry.Key), entry.Value);
+    }
+
+    private void InsertDollarSystem()
+    {
+      foreach (var entry in dollarSystem)
+        query = Regex.Replace(query, Regex.Escape(entry.Value), entry.Key);
+    }
+
     public void Execute(string dbNAV, string dbBC, string company, bool runOnlyCompany)
     {
       if (runOnlyCompany && !hasCompany)
