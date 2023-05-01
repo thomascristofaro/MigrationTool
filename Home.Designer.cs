@@ -60,6 +60,9 @@ namespace MigrationTool
       this.dbNavTextBox = new System.Windows.Forms.TextBox();
       this.dbBCTextBox = new System.Windows.Forms.TextBox();
       this.companiesTextBox = new System.Windows.Forms.TextBox();
+      this.connLabel = new System.Windows.Forms.Label();
+      this.connTextBox = new System.Windows.Forms.TextBox();
+      this.onlyCompanyCheckBox = new System.Windows.Forms.CheckBox();
       this.menuStrip1.SuspendLayout();
       this.statusStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -291,38 +294,67 @@ namespace MigrationTool
       // CompaniesLabel
       // 
       this.CompaniesLabel.AutoSize = true;
-      this.CompaniesLabel.Location = new System.Drawing.Point(12, 144);
+      this.CompaniesLabel.Location = new System.Drawing.Point(383, 144);
       this.CompaniesLabel.Name = "CompaniesLabel";
-      this.CompaniesLabel.Size = new System.Drawing.Size(83, 20);
+      this.CompaniesLabel.Size = new System.Drawing.Size(72, 20);
       this.CompaniesLabel.TabIndex = 11;
-      this.CompaniesLabel.Text = "Companies";
+      this.CompaniesLabel.Text = "Company";
       // 
       // dbNavTextBox
       // 
-      this.dbNavTextBox.Location = new System.Drawing.Point(451, 51);
+      this.dbNavTextBox.Location = new System.Drawing.Point(472, 51);
       this.dbNavTextBox.Name = "dbNavTextBox";
       this.dbNavTextBox.Size = new System.Drawing.Size(200, 27);
       this.dbNavTextBox.TabIndex = 12;
       // 
       // dbBCTextBox
       // 
-      this.dbBCTextBox.Location = new System.Drawing.Point(451, 97);
+      this.dbBCTextBox.Location = new System.Drawing.Point(472, 97);
       this.dbBCTextBox.Name = "dbBCTextBox";
       this.dbBCTextBox.Size = new System.Drawing.Size(200, 27);
       this.dbBCTextBox.TabIndex = 13;
       // 
       // companiesTextBox
       // 
-      this.companiesTextBox.Location = new System.Drawing.Point(119, 141);
+      this.companiesTextBox.Location = new System.Drawing.Point(472, 141);
       this.companiesTextBox.Name = "companiesTextBox";
-      this.companiesTextBox.Size = new System.Drawing.Size(532, 27);
+      this.companiesTextBox.Size = new System.Drawing.Size(200, 27);
       this.companiesTextBox.TabIndex = 14;
+      // 
+      // connLabel
+      // 
+      this.connLabel.AutoSize = true;
+      this.connLabel.Location = new System.Drawing.Point(12, 144);
+      this.connLabel.Name = "connLabel";
+      this.connLabel.Size = new System.Drawing.Size(84, 20);
+      this.connLabel.TabIndex = 15;
+      this.connLabel.Text = "Connection";
+      // 
+      // connTextBox
+      // 
+      this.connTextBox.Location = new System.Drawing.Point(119, 141);
+      this.connTextBox.Name = "connTextBox";
+      this.connTextBox.Size = new System.Drawing.Size(200, 27);
+      this.connTextBox.TabIndex = 16;
+      // 
+      // onlyCompanyCheckBox
+      // 
+      this.onlyCompanyCheckBox.AutoSize = true;
+      this.onlyCompanyCheckBox.Location = new System.Drawing.Point(694, 99);
+      this.onlyCompanyCheckBox.Name = "onlyCompanyCheckBox";
+      this.onlyCompanyCheckBox.Size = new System.Drawing.Size(153, 24);
+      this.onlyCompanyCheckBox.TabIndex = 18;
+      this.onlyCompanyCheckBox.Text = "Run only company";
+      this.onlyCompanyCheckBox.UseVisualStyleBackColor = true;
       // 
       // MigrationTool
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(800, 517);
+      this.Controls.Add(this.onlyCompanyCheckBox);
+      this.Controls.Add(this.connTextBox);
+      this.Controls.Add(this.connLabel);
       this.Controls.Add(this.companiesTextBox);
       this.Controls.Add(this.dbBCTextBox);
       this.Controls.Add(this.dbNavTextBox);
@@ -384,6 +416,9 @@ namespace MigrationTool
     private System.Windows.Forms.TextBox dbNavTextBox;
     private System.Windows.Forms.TextBox dbBCTextBox;
     private System.Windows.Forms.TextBox companiesTextBox;
+    private System.Windows.Forms.Label connLabel;
+    private System.Windows.Forms.TextBox connTextBox;
+    private System.Windows.Forms.CheckBox onlyCompanyCheckBox;
   }
 }
 

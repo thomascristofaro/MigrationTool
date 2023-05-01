@@ -30,11 +30,11 @@ namespace MigrationTool
     private void InitializeComponent()
     {
       this.queryDataGridView = new System.Windows.Forms.DataGridView();
-      this.queryTextBox = new System.Windows.Forms.TextBox();
       this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.Table = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.Company = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.queryTextBox = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.queryDataGridView)).BeginInit();
       this.SuspendLayout();
       // 
@@ -56,15 +56,6 @@ namespace MigrationTool
       this.queryDataGridView.Size = new System.Drawing.Size(656, 529);
       this.queryDataGridView.TabIndex = 0;
       this.queryDataGridView.SelectionChanged += new System.EventHandler(this.queryDataGridView_SelectionChanged);
-      // 
-      // queryTextBox
-      // 
-      this.queryTextBox.Location = new System.Drawing.Point(674, 12);
-      this.queryTextBox.Multiline = true;
-      this.queryTextBox.Name = "queryTextBox";
-      this.queryTextBox.ReadOnly = true;
-      this.queryTextBox.Size = new System.Drawing.Size(796, 529);
-      this.queryTextBox.TabIndex = 1;
       // 
       // Id
       // 
@@ -95,6 +86,16 @@ namespace MigrationTool
       this.Company.MinimumWidth = 6;
       this.Company.Name = "Company";
       this.Company.Width = 125;
+      // 
+      // queryTextBox
+      // 
+      this.queryTextBox.Location = new System.Drawing.Point(674, 12);
+      this.queryTextBox.Multiline = true;
+      this.queryTextBox.Name = "queryTextBox";
+      this.queryTextBox.ReadOnly = true;
+      this.queryTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+      this.queryTextBox.Size = new System.Drawing.Size(796, 529);
+      this.queryTextBox.TabIndex = 1;
       // 
       // QueryForm
       // 

@@ -20,6 +20,7 @@ namespace MigrationTool
     public string dbNAV { get; set; }
     public string dbBC { get; set; }
     public string companyForQuery { get; set; }
+    public bool runOnlyCompany { get; set; }
 
     public MigrationController()
     {
@@ -37,7 +38,7 @@ namespace MigrationTool
       queries.Clear();
       MigrationLog.Write("Loading migration file: " + path);
       string readText = File.ReadAllText(path);
-      string[] rawQueries = Regex.Split(readText, SPLIT_TEXT);
+      string[] rawQueries = Regex.Split(readText, SPLIT_TEXT, RegexOptions.IgnoreCase);
       // posso fare una progress
       foreach (var rawQuery in rawQueries)
       {

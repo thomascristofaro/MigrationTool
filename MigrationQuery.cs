@@ -9,11 +9,13 @@ namespace MigrationTool
   public class MigrationQuery
   {
     private const string REGEX_COMPANY = @"(?<=\[)(?!.*\[)(.*?)(?=\$)";
+    private const string REGEX_HAS_COMPANY = @"(\$.*)(?=\$)";
     public int id { get; set; }
     public bool enabled { get; set; }
     public string query { get; set; }
     public string table { get; set; }
     public string company { get; set; }
+    public bool hasCompany { get; set; }
     public MigrationQueryType type { get; set; }
 
     public MigrationQuery(int id)
@@ -23,6 +25,7 @@ namespace MigrationTool
       query = "";
       table = "";
       company = "";
+      hasCompany = false;
       type = MigrationQueryType.NOT_FOUND;
     }
 
@@ -41,10 +44,15 @@ namespace MigrationTool
 
     private void CheckCompany()
     {
+      hasCompany = Regex.IsMatch(query, REGEX_HAS_COMPANY);
       bool ignoreCompany = Regex.IsMatch(query, @"(--@@@IGNORE COMPANY@@@)");
       if (ignoreCompany)
       {
         query = Regex.Replace(query, @"(--@@@IGNORE COMPANY@@@)", "");
+        
+        if (!hasCompany)
+          throw new Exception(message: "Query without company");
+
         Match m = Regex.Match(query, REGEX_COMPANY);
         if (!m.Success)
           throw new Exception(message: "Company not found");
@@ -71,9 +79,8 @@ namespace MigrationTool
           if (typeStr.StartsWith("UPDATE"))
             type = MigrationQueryType.UPDATE;
 
-        // da ricontrollare, alcuni hanno ] finale e altri no
         var i1 = first.LastIndexOf('[') + 1;
-        first = first.Substring(i1, first.Length - 1 - i1);
+        first = first.Substring(i1, first.LastIndexOf(']') - i1);
 
         i1 = first.IndexOf('$');
         if (i1 != first.LastIndexOf('$'))
@@ -85,7 +92,8 @@ namespace MigrationTool
 
     private void ReplacePlaceholders(string companyPlaceholder, Dictionary<string, string> placeholders)
     {
-      query = Regex.Replace(query, REGEX_COMPANY, companyPlaceholder);
+      if (hasCompany)
+        query = Regex.Replace(query, REGEX_COMPANY, companyPlaceholder);
 
       foreach (var placeholder in placeholders)
       {
@@ -95,21 +103,44 @@ namespace MigrationTool
           RegexOptions.IgnoreCase);
       }
     }
-    public void Execute(string dbNAV, string dbBC, string company)
+    public void Execute(string dbNAV, string dbBC, string company, bool runOnlyCompany)
     {
+      if (runOnlyCompany && !hasCompany)
+      {
+        MigrationLog.Write("SKIP - NOT COMPANY: " + NameForLog());
+        return;
+      }
+
       if (this.company != "" && company != this.company)
       {
         MigrationLog.Write("SKIP - COMPANY: " + this.company + NameForLog());
         return;
       }
-      MigrationLog.Write("EXECUTE: " + NameForLog());
-      System.Threading.Thread.Sleep(100);
-      MigrationLog.Write("DONE: " + NameForLog());
+      MigrationLog.Write("EXECUTE: " + NameForLog(company));
+      
+      var q = query.Replace("{DB_BC}", '[' + dbBC+ ']');
+      q = q.Replace("{DB_NAV}", '[' + dbNAV + ']');
+      q = q.Replace("{COMPANY}", company);
+
+      try
+      {
+        SqlController.RunQuery(q);
+      }
+      catch (Exception ex)
+      {
+        MigrationLog.Write("!!! ERRORE PER: " + NameForLog(company) + " - " + ex.Message);
+        return;
+      }
+      
+      MigrationLog.Write("DONE: " + NameForLog(company));
     }
 
-    private string NameForLog()
+    private string NameForLog(string company="")
     {
-      return id + " - " + table;
+      if (company != "" && hasCompany)
+        return id + " - " + company + "$" + table;
+      else
+        return id + " - " + table;
     }
   }
 }

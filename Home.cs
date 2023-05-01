@@ -58,9 +58,10 @@ namespace MigrationTool
         return;
       }
 
-      if (dbBCTextBox.Text == "" || dbNavTextBox.Text == "" || companiesTextBox.Text == "")
+      if (dbBCTextBox.Text == "" || dbNavTextBox.Text == "" || 
+          companiesTextBox.Text == "" || connTextBox.Text == "")
       {
-        MigrationLog.ShowError("Inserire il DB di NAV, BC e la Company");
+        MigrationLog.ShowError("Inserire il DB di NAV, BC, la Company e la stringa di connessione");
         return;
       }
 
@@ -70,11 +71,23 @@ namespace MigrationTool
         return;
       }
 
+      try
+      {
+        SqlController.SetConnectionString(connTextBox.Text);
+        SqlController.Connect();
+      }
+      catch (Exception ex)
+      {
+        MigrationLog.ShowError("Errore in connessione: " + ex.Message);
+        return;
+      }
+
       startTextBox.Text = DateTime.Now.ToString();
 
       migCtrl.dbNAV = dbNavTextBox.Text;
       migCtrl.dbBC = dbBCTextBox.Text;
       migCtrl.companyForQuery = companiesTextBox.Text;
+      migCtrl.runOnlyCompany = onlyCompanyCheckBox.Checked;
 
       runProgressBar.Maximum = migCtrl.queries.Count;
       runProgressBar.Minimum = 0;
@@ -103,7 +116,7 @@ namespace MigrationTool
         }
         else
         {
-          migCtrl.queries[i].Execute(migCtrl.dbNAV, migCtrl.dbBC, migCtrl.companyForQuery);
+          migCtrl.queries[i].Execute(migCtrl.dbNAV, migCtrl.dbBC, migCtrl.companyForQuery, migCtrl.runOnlyCompany);
           worker.ReportProgress(i);
         }
       }
@@ -118,6 +131,7 @@ namespace MigrationTool
     private void runBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
     {
       runProgressBar.Value = 0;
+      SqlController.Disconnect();
 
       if (e.Cancelled == true)
         MigrationLog.Write("CANCELED: " + DateTime.Now.ToString());
