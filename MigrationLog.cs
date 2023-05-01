@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 
 namespace MigrationTool
 {
   class MigrationLog
   {
     private delegate void WriteLog(string text);
-    private static System.Windows.Forms.TextBox logTextBox = null;
+    private static TextBox logTextBox = null;
 
-    public static void SetTextBox(System.Windows.Forms.TextBox formTextBox)
+    public static void SetTextBox(TextBox formTextBox)
     {
       logTextBox = formTextBox;
     }
@@ -35,6 +36,15 @@ namespace MigrationTool
     public static void Clear()
     {
       logTextBox.Clear();
+    }
+
+    public static void ShowError(string message)
+    {
+      MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+    public static void ShowMessage(string message)
+    {
+      MessageBox.Show(message, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
   }
 }

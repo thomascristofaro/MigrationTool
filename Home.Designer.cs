@@ -53,6 +53,13 @@ namespace MigrationTool
       this.startLabel = new System.Windows.Forms.Label();
       this.startTextBox = new System.Windows.Forms.TextBox();
       this.runBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+      this.cancelButton = new System.Windows.Forms.Button();
+      this.dbNavLabel = new System.Windows.Forms.Label();
+      this.dbBCLabel = new System.Windows.Forms.Label();
+      this.CompaniesLabel = new System.Windows.Forms.Label();
+      this.dbNavTextBox = new System.Windows.Forms.TextBox();
+      this.dbBCTextBox = new System.Windows.Forms.TextBox();
+      this.companiesTextBox = new System.Windows.Forms.TextBox();
       this.menuStrip1.SuspendLayout();
       this.statusStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -179,7 +186,7 @@ namespace MigrationTool
       this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-      this.statusStrip1.Location = new System.Drawing.Point(0, 411);
+      this.statusStrip1.Location = new System.Drawing.Point(0, 491);
       this.statusStrip1.Name = "statusStrip1";
       this.statusStrip1.Size = new System.Drawing.Size(800, 26);
       this.statusStrip1.TabIndex = 1;
@@ -194,7 +201,7 @@ namespace MigrationTool
       // migFileLabel
       // 
       this.migFileLabel.AutoSize = true;
-      this.migFileLabel.Location = new System.Drawing.Point(12, 49);
+      this.migFileLabel.Location = new System.Drawing.Point(12, 54);
       this.migFileLabel.Name = "migFileLabel";
       this.migFileLabel.Size = new System.Drawing.Size(101, 20);
       this.migFileLabel.TabIndex = 2;
@@ -202,36 +209,36 @@ namespace MigrationTool
       // 
       // migFileTextBox
       // 
-      this.migFileTextBox.Enabled = false;
       this.migFileTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
       this.migFileTextBox.ForeColor = System.Drawing.SystemColors.ControlText;
-      this.migFileTextBox.Location = new System.Drawing.Point(119, 46);
+      this.migFileTextBox.Location = new System.Drawing.Point(119, 51);
       this.migFileTextBox.Name = "migFileTextBox";
       this.migFileTextBox.ReadOnly = true;
-      this.migFileTextBox.Size = new System.Drawing.Size(125, 27);
+      this.migFileTextBox.Size = new System.Drawing.Size(200, 27);
       this.migFileTextBox.TabIndex = 3;
       this.migFileTextBox.Text = "Not Loaded";
       // 
       // logTextBox
       // 
-      this.logTextBox.Location = new System.Drawing.Point(12, 142);
+      this.logTextBox.Location = new System.Drawing.Point(12, 222);
       this.logTextBox.Multiline = true;
       this.logTextBox.Name = "logTextBox";
+      this.logTextBox.ReadOnly = true;
       this.logTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
       this.logTextBox.Size = new System.Drawing.Size(776, 266);
       this.logTextBox.TabIndex = 4;
       // 
       // runProgressBar
       // 
-      this.runProgressBar.Location = new System.Drawing.Point(12, 107);
+      this.runProgressBar.Location = new System.Drawing.Point(12, 187);
       this.runProgressBar.Name = "runProgressBar";
-      this.runProgressBar.Size = new System.Drawing.Size(776, 29);
+      this.runProgressBar.Size = new System.Drawing.Size(676, 29);
       this.runProgressBar.TabIndex = 5;
       // 
       // startLabel
       // 
       this.startLabel.AutoSize = true;
-      this.startLabel.Location = new System.Drawing.Point(326, 49);
+      this.startLabel.Location = new System.Drawing.Point(12, 100);
       this.startLabel.Name = "startLabel";
       this.startLabel.Size = new System.Drawing.Size(77, 20);
       this.startLabel.TabIndex = 6;
@@ -239,11 +246,10 @@ namespace MigrationTool
       // 
       // startTextBox
       // 
-      this.startTextBox.Enabled = false;
-      this.startTextBox.Location = new System.Drawing.Point(409, 46);
+      this.startTextBox.Location = new System.Drawing.Point(119, 97);
       this.startTextBox.Name = "startTextBox";
       this.startTextBox.ReadOnly = true;
-      this.startTextBox.Size = new System.Drawing.Size(125, 27);
+      this.startTextBox.Size = new System.Drawing.Size(200, 27);
       this.startTextBox.TabIndex = 7;
       // 
       // runBackgroundWorker
@@ -254,11 +260,76 @@ namespace MigrationTool
       this.runBackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.runBackgroundWorker_ProgressChanged);
       this.runBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.runBackgroundWorker_RunWorkerCompleted);
       // 
+      // cancelButton
+      // 
+      this.cancelButton.Location = new System.Drawing.Point(694, 187);
+      this.cancelButton.Name = "cancelButton";
+      this.cancelButton.Size = new System.Drawing.Size(94, 29);
+      this.cancelButton.TabIndex = 8;
+      this.cancelButton.Text = "Cancel";
+      this.cancelButton.UseVisualStyleBackColor = true;
+      this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+      // 
+      // dbNavLabel
+      // 
+      this.dbNavLabel.AutoSize = true;
+      this.dbNavLabel.Location = new System.Drawing.Point(383, 54);
+      this.dbNavLabel.Name = "dbNavLabel";
+      this.dbNavLabel.Size = new System.Drawing.Size(62, 20);
+      this.dbNavLabel.TabIndex = 9;
+      this.dbNavLabel.Text = "DB NAV";
+      // 
+      // dbBCLabel
+      // 
+      this.dbBCLabel.AutoSize = true;
+      this.dbBCLabel.Location = new System.Drawing.Point(383, 100);
+      this.dbBCLabel.Name = "dbBCLabel";
+      this.dbBCLabel.Size = new System.Drawing.Size(51, 20);
+      this.dbBCLabel.TabIndex = 10;
+      this.dbBCLabel.Text = "DB BC";
+      // 
+      // CompaniesLabel
+      // 
+      this.CompaniesLabel.AutoSize = true;
+      this.CompaniesLabel.Location = new System.Drawing.Point(12, 144);
+      this.CompaniesLabel.Name = "CompaniesLabel";
+      this.CompaniesLabel.Size = new System.Drawing.Size(83, 20);
+      this.CompaniesLabel.TabIndex = 11;
+      this.CompaniesLabel.Text = "Companies";
+      // 
+      // dbNavTextBox
+      // 
+      this.dbNavTextBox.Location = new System.Drawing.Point(451, 51);
+      this.dbNavTextBox.Name = "dbNavTextBox";
+      this.dbNavTextBox.Size = new System.Drawing.Size(200, 27);
+      this.dbNavTextBox.TabIndex = 12;
+      // 
+      // dbBCTextBox
+      // 
+      this.dbBCTextBox.Location = new System.Drawing.Point(451, 97);
+      this.dbBCTextBox.Name = "dbBCTextBox";
+      this.dbBCTextBox.Size = new System.Drawing.Size(200, 27);
+      this.dbBCTextBox.TabIndex = 13;
+      // 
+      // companiesTextBox
+      // 
+      this.companiesTextBox.Location = new System.Drawing.Point(119, 141);
+      this.companiesTextBox.Name = "companiesTextBox";
+      this.companiesTextBox.Size = new System.Drawing.Size(532, 27);
+      this.companiesTextBox.TabIndex = 14;
+      // 
       // MigrationTool
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(800, 437);
+      this.ClientSize = new System.Drawing.Size(800, 517);
+      this.Controls.Add(this.companiesTextBox);
+      this.Controls.Add(this.dbBCTextBox);
+      this.Controls.Add(this.dbNavTextBox);
+      this.Controls.Add(this.CompaniesLabel);
+      this.Controls.Add(this.dbBCLabel);
+      this.Controls.Add(this.dbNavLabel);
+      this.Controls.Add(this.cancelButton);
       this.Controls.Add(this.startTextBox);
       this.Controls.Add(this.startLabel);
       this.Controls.Add(this.runProgressBar);
@@ -306,6 +377,13 @@ namespace MigrationTool
     private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.ComponentModel.BackgroundWorker runBackgroundWorker;
+    private System.Windows.Forms.Button cancelButton;
+    private System.Windows.Forms.Label dbNavLabel;
+    private System.Windows.Forms.Label dbBCLabel;
+    private System.Windows.Forms.Label CompaniesLabel;
+    private System.Windows.Forms.TextBox dbNavTextBox;
+    private System.Windows.Forms.TextBox dbBCTextBox;
+    private System.Windows.Forms.TextBox companiesTextBox;
   }
 }
 

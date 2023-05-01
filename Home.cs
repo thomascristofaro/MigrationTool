@@ -19,18 +19,8 @@ namespace MigrationTool
       InitializeComponent();
     }
 
-    private void UpdateStatus(string item)
-    {
-      if (item != null)
-      {
-        string msg = String.Format("{0} selected", item);
-        this.statusStrip1.Items[0].Text = msg;
-      }
-    }
-
     private void fileToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
     {
-      this.UpdateStatus(e.ClickedItem.Text);
     }
 
     private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -40,7 +30,7 @@ namespace MigrationTool
       if (open.ShowDialog() == DialogResult.OK)
       {
         migCtrl.LoadMigrationFile(open.FileName);
-        migFileTextBox.Text = "Loaded";
+        migFileTextBox.Text = open.FileName;
       }
     }
 
@@ -64,16 +54,40 @@ namespace MigrationTool
     {
       if (migCtrl.queries.Count == 0)
       {
-        MessageBox.Show("File non caricato!", "ERRORE");
+        MigrationLog.ShowError("File non caricato");
         return;
       }
 
+      if (dbBCTextBox.Text == "" || dbNavTextBox.Text == "" || companiesTextBox.Text == "")
+      {
+        MigrationLog.ShowError("Inserire il DB di NAV, BC e la Company");
+        return;
+      }
+
+      if (runBackgroundWorker.IsBusy)
+      {
+        MigrationLog.ShowError("Run in corso");
+        return;
+      }
+
+      startTextBox.Text = DateTime.Now.ToString();
+
+      migCtrl.dbNAV = dbNavTextBox.Text;
+      migCtrl.dbBC = dbBCTextBox.Text;
+      migCtrl.companyForQuery = companiesTextBox.Text;
+
       runProgressBar.Maximum = migCtrl.queries.Count;
       runProgressBar.Minimum = 0;
+      runProgressBar.Value = 0;
       runProgressBar.Step = 1;
+      
+      runBackgroundWorker.RunWorkerAsync();
+    }
 
-      if (runBackgroundWorker.IsBusy != true)
-        runBackgroundWorker.RunWorkerAsync();
+    private void cancelButton_Click(object sender, EventArgs e)
+    {
+      if (runBackgroundWorker.WorkerSupportsCancellation)
+        runBackgroundWorker.CancelAsync();
     }
 
     private void runBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -89,7 +103,7 @@ namespace MigrationTool
         }
         else
         {
-          migCtrl.queries[i].Run();
+          migCtrl.queries[i].Execute(migCtrl.dbNAV, migCtrl.dbBC, migCtrl.companyForQuery);
           worker.ReportProgress(i);
         }
       }
@@ -103,19 +117,14 @@ namespace MigrationTool
 
     private void runBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
     {
-      if (e.Cancelled == true)
-      {
-        UpdateStatus("Canceled!");
-      }
-      else if (e.Error != null)
-      {
-        UpdateStatus("Error: " + e.Error.Message);
-      }
-      else
-      {
-        UpdateStatus("Done!");
-      }
+      runProgressBar.Value = 0;
 
+      if (e.Cancelled == true)
+        MigrationLog.Write("CANCELED: " + DateTime.Now.ToString());
+      else if (e.Error != null)
+        MigrationLog.Write("ERROR: " + e.Error.Message + DateTime.Now.ToString());
+      else
+        MigrationLog.Write("DONE: " + DateTime.Now.ToString());
     }
   }
 }

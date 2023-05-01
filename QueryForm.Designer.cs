@@ -31,7 +31,8 @@ namespace MigrationTool
     {
       this.queryDataGridView = new System.Windows.Forms.DataGridView();
       this.queryTextBox = new System.Windows.Forms.TextBox();
-      this.Enabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+      this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.Table = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.Company = new System.Windows.Forms.DataGridViewTextBoxColumn();
       ((System.ComponentModel.ISupportInitialize)(this.queryDataGridView)).BeginInit();
@@ -43,7 +44,8 @@ namespace MigrationTool
       this.queryDataGridView.AllowUserToDeleteRows = false;
       this.queryDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.queryDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Enabled,
+            this.Id,
+            this.Type,
             this.Table,
             this.Company});
       this.queryDataGridView.Location = new System.Drawing.Point(12, 12);
@@ -60,15 +62,24 @@ namespace MigrationTool
       this.queryTextBox.Location = new System.Drawing.Point(674, 12);
       this.queryTextBox.Multiline = true;
       this.queryTextBox.Name = "queryTextBox";
+      this.queryTextBox.ReadOnly = true;
       this.queryTextBox.Size = new System.Drawing.Size(796, 529);
       this.queryTextBox.TabIndex = 1;
       // 
-      // Enabled
+      // Id
       // 
-      this.Enabled.HeaderText = "Enabled";
-      this.Enabled.MinimumWidth = 6;
-      this.Enabled.Name = "Enabled";
-      this.Enabled.Width = 70;
+      this.Id.HeaderText = "Id";
+      this.Id.MinimumWidth = 6;
+      this.Id.Name = "Id";
+      this.Id.ReadOnly = true;
+      this.Id.Width = 75;
+      // 
+      // Type
+      // 
+      this.Type.HeaderText = "Type";
+      this.Type.MinimumWidth = 6;
+      this.Type.Name = "Type";
+      this.Type.Width = 125;
       // 
       // Table
       // 
@@ -105,7 +116,8 @@ namespace MigrationTool
 
     private System.Windows.Forms.DataGridView queryDataGridView;
     private System.Windows.Forms.TextBox queryTextBox;
-    private System.Windows.Forms.DataGridViewCheckBoxColumn Enabled;
+    private System.Windows.Forms.DataGridViewTextBoxColumn Id;
+    private System.Windows.Forms.DataGridViewTextBoxColumn Type;
     private System.Windows.Forms.DataGridViewTextBoxColumn Table;
     private System.Windows.Forms.DataGridViewTextBoxColumn Company;
   }

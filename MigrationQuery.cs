@@ -5,31 +5,36 @@ using System.Text.RegularExpressions;
 
 namespace MigrationTool
 {
+  public enum MigrationQueryType { NOT_FOUND, DELETE, UPDATE }
   public class MigrationQuery
   {
-    public bool enabled = true;
-    public string query = "";
-    public string table = "";
-    public string company = "";
     private const string REGEX_COMPANY = @"(?<=\[)(?!.*\[)(.*?)(?=\$)";
-    
-    public MigrationQuery() => enabled = true;
+    public int id { get; set; }
+    public bool enabled { get; set; }
+    public string query { get; set; }
+    public string table { get; set; }
+    public string company { get; set; }
+    public MigrationQueryType type { get; set; }
 
-    public MigrationQuery(string table, string query, string company)
+    public MigrationQuery(int id)
     {
-      this.query = query;
-      this.table = table;
-      this.company = company;
+      this.id = id;
       enabled = true;
+      query = "";
+      table = "";
+      company = "";
+      type = MigrationQueryType.NOT_FOUND;
     }
 
-    public static MigrationQuery CreateFromRaw(string rawQuery, string companyPlaceholder, Dictionary<string, string> placeholders)
+    public static MigrationQuery CreateFromRaw(int id, string rawQuery, string companyPlaceholder, Dictionary<string, string> placeholders)
     {
-      MigrationQuery q = new MigrationQuery();
+      MigrationQuery q = new MigrationQuery(id);
       q.query = rawQuery;
       q.CheckCompany();
       q.RemoveComment();
-      q.table = q.GetTableName();
+      if (q.query.Length <= 0)
+        return null;
+      q.SetTableAndTypeFromQuery();
       q.ReplacePlaceholders(companyPlaceholder, placeholders);
       return q;
     }
@@ -52,27 +57,30 @@ namespace MigrationTool
       query = query.Trim();
     }
 
-    public string GetTableName()
+    public void SetTableAndTypeFromQuery()
     {
-      if (table != "")
-        return table;
-
       if (query.Length > 0)
       {
         using var reader = new System.IO.StringReader(query);
         string first = reader.ReadLine().Trim();
+
+        string typeStr = first.Substring(0, first.IndexOf('[')).ToUpper();
+        if (typeStr.StartsWith("DELETE"))
+          type = MigrationQueryType.DELETE;
+        else
+          if (typeStr.StartsWith("UPDATE"))
+            type = MigrationQueryType.UPDATE;
+
+        // da ricontrollare, alcuni hanno ] finale e altri no
         var i1 = first.LastIndexOf('[') + 1;
         first = first.Substring(i1, first.Length - 1 - i1);
 
         i1 = first.IndexOf('$');
         if (i1 != first.LastIndexOf('$'))
-        {
           first = first.Substring(i1 + 1);
-        }
 
-        return first;
+        table = first;
       }
-      return "";
     }
 
     private void ReplacePlaceholders(string companyPlaceholder, Dictionary<string, string> placeholders)
@@ -87,10 +95,21 @@ namespace MigrationTool
           RegexOptions.IgnoreCase);
       }
     }
-    public void Run()
+    public void Execute(string dbNAV, string dbBC, string company)
     {
-      MigrationLog.Write("Esportazione query: " + table);
+      if (this.company != "" && company != this.company)
+      {
+        MigrationLog.Write("SKIP - COMPANY: " + this.company + NameForLog());
+        return;
+      }
+      MigrationLog.Write("EXECUTE: " + NameForLog());
       System.Threading.Thread.Sleep(100);
+      MigrationLog.Write("DONE: " + NameForLog());
+    }
+
+    private string NameForLog()
+    {
+      return id + " - " + table;
     }
   }
 }
