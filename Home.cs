@@ -73,8 +73,7 @@ namespace MigrationTool
 
       try
       {
-        SqlController.SetConnectionString(connTextBox.Text);
-        SqlController.Connect();
+        SqlController.Connect(connTextBox.Text);
       }
       catch (Exception ex)
       {
@@ -139,6 +138,25 @@ namespace MigrationTool
         MigrationLog.Write("ERROR: " + e.Error.Message + DateTime.Now.ToString());
       else
         MigrationLog.Write("DONE: " + DateTime.Now.ToString());
+    }
+
+    private void shrinkStripMenuItem_Click(object sender, EventArgs e)
+    {
+      if (dbBCTextBox.Text == "" || connTextBox.Text == "")
+      {
+        MigrationLog.ShowError("Inserire il DB di BC e la stringa di connessione");
+        return;
+      }
+      try
+      {
+        SqlController.Connect(connTextBox.Text);
+      }
+      catch (Exception ex)
+      {
+        MigrationLog.ShowError("Errore in connessione: " + ex.Message);
+        return;
+      }
+      SqlController.ShrinkFile(dbBCTextBox.Text, "Propagroup_log");
     }
   }
 }

@@ -133,13 +133,13 @@ namespace MigrationTool
     {
       if (runOnlyCompany && !hasCompany)
       {
-        MigrationLog.Write("SKIP - NOT COMPANY: " + NameForLog());
+        MigrationLog.Write("SKIP   : NOT COMPANY - " + NameForLog());
         return;
       }
 
       if (this.company != "" && company != this.company)
       {
-        MigrationLog.Write("SKIP - COMPANY: " + this.company + NameForLog());
+        MigrationLog.Write("SKIP   : COMPANY - " + this.company + NameForLog());
         return;
       }
       MigrationLog.Write("EXECUTE: " + NameForLog(company));
@@ -148,17 +148,20 @@ namespace MigrationTool
       q = q.Replace("{DB_NAV}", '[' + dbNAV + ']');
       q = q.Replace("{COMPANY}", company);
 
+      int row_affected;
       try
       {
-        SqlController.RunQuery(q);
+        row_affected = SqlController.RunQuery(q);
+        SqlController.ShrinkFile(dbBC, "Propagroup_log");
       }
       catch (Exception ex)
       {
-        MigrationLog.Write("!!! ERRORE PER: " + NameForLog(company) + " - " + ex.Message);
+        MigrationLog.Write("ERRORE : " + NameForLog(company) + " - " + ex.Message);
         return;
       }
       
-      MigrationLog.Write("DONE: " + NameForLog(company));
+      MigrationLog.Write("DONE   : " + NameForLog(company) + " " + 
+        row_affected.ToString() + " row affected");
     }
 
     private string NameForLog(string company="")

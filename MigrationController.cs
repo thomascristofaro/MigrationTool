@@ -10,7 +10,8 @@ namespace MigrationTool
   public class MigrationController
   {
     //public static MigrationController instance;
-    private const string SPLIT_TEXT = @"(?=DELETE FROM|UPDATE \[)";
+    private const string SPLIT_TEXT = @"(?=---------- CUT ----------)";
+    //private const string SPLIT_TEXT = @"(?=DELETE FROM|UPDATE \[)";
     private const string companyPlaceholder = "{COMPANY}";
     private Dictionary<string, string> placeholders;
 
@@ -54,11 +55,6 @@ namespace MigrationTool
     }
 
     public void ExportMigrationFile(String Path)
-    {
-
-    }
-
-    void ShrinkFile()
     {
 
     }

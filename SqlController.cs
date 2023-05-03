@@ -13,6 +13,13 @@ namespace MigrationTool
       conn.ConnectionString = connection;
     }
 
+    public static void Connect(string connection)
+    {
+      conn = new SqlConnection();
+      conn.ConnectionString = connection;
+      conn.Open();
+    }
+
     public static void Connect()
     {
       conn.Open();
@@ -29,6 +36,23 @@ namespace MigrationTool
       cmd.CommandText = query;
       cmd.CommandTimeout = 999999;
       return cmd.ExecuteNonQuery();
+    }
+
+    public static void ShrinkFile(string db, string log)
+    {
+      string shrink_query = 
+        @"USE {DB};
+          GO
+          DBCC SHRINKFILE({LOG}, 1);
+          GO";
+      shrink_query.Replace("{DB}", '[' + db + ']');
+      shrink_query.Replace("{LOG}", log);
+
+      SqlCommand cmd = new SqlCommand();
+      cmd.Connection = conn;
+      cmd.CommandText = shrink_query;
+      cmd.CommandTimeout = 999999;
+      cmd.ExecuteNonQuery();
     }
   }
 }

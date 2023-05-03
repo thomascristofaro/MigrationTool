@@ -63,6 +63,7 @@ namespace MigrationTool
       this.connLabel = new System.Windows.Forms.Label();
       this.connTextBox = new System.Windows.Forms.TextBox();
       this.onlyCompanyCheckBox = new System.Windows.Forms.CheckBox();
+      this.shrinkStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip1.SuspendLayout();
       this.statusStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -158,7 +159,8 @@ namespace MigrationTool
       // toolsToolStripMenuItem
       // 
       this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.runToolStripMenuItem});
+            this.runToolStripMenuItem,
+            this.shrinkStripMenuItem});
       this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
       this.toolsToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
       this.toolsToolStripMenuItem.Text = "&Tools";
@@ -166,7 +168,7 @@ namespace MigrationTool
       // runToolStripMenuItem
       // 
       this.runToolStripMenuItem.Name = "runToolStripMenuItem";
-      this.runToolStripMenuItem.Size = new System.Drawing.Size(117, 26);
+      this.runToolStripMenuItem.Size = new System.Drawing.Size(132, 26);
       this.runToolStripMenuItem.Text = "&Run";
       this.runToolStripMenuItem.Click += new System.EventHandler(this.runToolStripMenuItem_Click);
       // 
@@ -347,6 +349,13 @@ namespace MigrationTool
       this.onlyCompanyCheckBox.Text = "Run only company";
       this.onlyCompanyCheckBox.UseVisualStyleBackColor = true;
       // 
+      // shrinkStripMenuItem
+      // 
+      this.shrinkStripMenuItem.Name = "shrinkStripMenuItem";
+      this.shrinkStripMenuItem.Size = new System.Drawing.Size(132, 26);
+      this.shrinkStripMenuItem.Text = "&Shrink";
+      this.shrinkStripMenuItem.Click += new System.EventHandler(this.shrinkStripMenuItem_Click);
+      // 
       // MigrationTool
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -419,6 +428,7 @@ namespace MigrationTool
     private System.Windows.Forms.Label connLabel;
     private System.Windows.Forms.TextBox connTextBox;
     private System.Windows.Forms.CheckBox onlyCompanyCheckBox;
+    private System.Windows.Forms.ToolStripMenuItem shrinkStripMenuItem;
   }
 }
 
