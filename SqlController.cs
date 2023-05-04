@@ -42,11 +42,9 @@ namespace MigrationTool
     {
       string shrink_query = 
         @"USE {DB};
-          GO
-          DBCC SHRINKFILE({LOG}, 1);
-          GO";
-      shrink_query.Replace("{DB}", '[' + db + ']');
-      shrink_query.Replace("{LOG}", log);
+          DBCC SHRINKFILE({LOG}, 1);";
+      shrink_query = shrink_query.Replace("{DB}", '[' + db + ']');
+      shrink_query = shrink_query.Replace("{LOG}", log);
 
       SqlCommand cmd = new SqlCommand();
       cmd.Connection = conn;

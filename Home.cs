@@ -82,6 +82,7 @@ namespace MigrationTool
       }
 
       startTextBox.Text = DateTime.Now.ToString();
+      MigrationLog.Write(startTextBox.Text);
 
       migCtrl.dbNAV = dbNavTextBox.Text;
       migCtrl.dbBC = dbBCTextBox.Text;
@@ -133,11 +134,11 @@ namespace MigrationTool
       SqlController.Disconnect();
 
       if (e.Cancelled == true)
-        MigrationLog.Write("CANCELED: " + DateTime.Now.ToString());
+        MigrationLog.Write("CANCELED: " + DateTime.Now.ToString() + startTextBox.Text);
       else if (e.Error != null)
-        MigrationLog.Write("ERROR: " + e.Error.Message + DateTime.Now.ToString());
+        MigrationLog.Write("ERROR: " + e.Error.Message + DateTime.Now.ToString() + startTextBox.Text);
       else
-        MigrationLog.Write("DONE: " + DateTime.Now.ToString());
+        MigrationLog.Write("DONE: " + DateTime.Now.ToString() + startTextBox.Text);
     }
 
     private void shrinkStripMenuItem_Click(object sender, EventArgs e)
