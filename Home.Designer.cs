@@ -42,28 +42,20 @@ namespace MigrationTool
       this.clearLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.shrinkStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-      this.migFileLabel = new System.Windows.Forms.Label();
-      this.migFileTextBox = new System.Windows.Forms.TextBox();
       this.logTextBox = new System.Windows.Forms.TextBox();
       this.runProgressBar = new System.Windows.Forms.ProgressBar();
       this.startLabel = new System.Windows.Forms.Label();
       this.startTextBox = new System.Windows.Forms.TextBox();
       this.runBackgroundWorker = new System.ComponentModel.BackgroundWorker();
       this.cancelButton = new System.Windows.Forms.Button();
-      this.dbNavLabel = new System.Windows.Forms.Label();
-      this.dbBCLabel = new System.Windows.Forms.Label();
-      this.CompaniesLabel = new System.Windows.Forms.Label();
-      this.dbNavTextBox = new System.Windows.Forms.TextBox();
-      this.dbBCTextBox = new System.Windows.Forms.TextBox();
-      this.companiesTextBox = new System.Windows.Forms.TextBox();
-      this.connLabel = new System.Windows.Forms.Label();
-      this.connTextBox = new System.Windows.Forms.TextBox();
-      this.onlyCompanyCheckBox = new System.Windows.Forms.CheckBox();
-      this.shrinkStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.companyOnRunTextBox = new System.Windows.Forms.TextBox();
+      this.compayLabel = new System.Windows.Forms.Label();
+      this.loadNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip1.SuspendLayout();
       this.statusStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -86,19 +78,19 @@ namespace MigrationTool
       // 
       this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loadToolStripMenuItem,
+            this.loadNewToolStripMenuItem,
             this.exportToolStripMenuItem,
             this.toolStripSeparator,
             this.exitToolStripMenuItem});
       this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
       this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
       this.fileToolStripMenuItem.Text = "&File";
-      this.fileToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.fileToolStripMenuItem_DropDownItemClicked);
       // 
       // loadToolStripMenuItem
       // 
       this.loadToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-      this.loadToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+      this.loadToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
       this.loadToolStripMenuItem.Text = "&Load";
       this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
       // 
@@ -106,18 +98,19 @@ namespace MigrationTool
       // 
       this.exportToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-      this.exportToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+      this.exportToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
       this.exportToolStripMenuItem.Text = "&Export";
+      this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
       // 
       // toolStripSeparator
       // 
       this.toolStripSeparator.Name = "toolStripSeparator";
-      this.toolStripSeparator.Size = new System.Drawing.Size(132, 6);
+      this.toolStripSeparator.Size = new System.Drawing.Size(156, 6);
       // 
       // exitToolStripMenuItem
       // 
       this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-      this.exitToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+      this.exitToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
       this.exitToolStripMenuItem.Text = "E&xit";
       // 
       // editToolStripMenuItem
@@ -143,6 +136,7 @@ namespace MigrationTool
       this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
       this.setupToolStripMenuItem.Size = new System.Drawing.Size(155, 26);
       this.setupToolStripMenuItem.Text = "&Setup";
+      this.setupToolStripMenuItem.Click += new System.EventHandler(this.setupToolStripMenuItem_Click);
       // 
       // toolStripSeparator1
       // 
@@ -172,6 +166,13 @@ namespace MigrationTool
       this.runToolStripMenuItem.Text = "&Run";
       this.runToolStripMenuItem.Click += new System.EventHandler(this.runToolStripMenuItem_Click);
       // 
+      // shrinkStripMenuItem
+      // 
+      this.shrinkStripMenuItem.Name = "shrinkStripMenuItem";
+      this.shrinkStripMenuItem.Size = new System.Drawing.Size(132, 26);
+      this.shrinkStripMenuItem.Text = "&Shrink";
+      this.shrinkStripMenuItem.Click += new System.EventHandler(this.shrinkStripMenuItem_Click);
+      // 
       // helpToolStripMenuItem
       // 
       this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -191,7 +192,7 @@ namespace MigrationTool
       this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-      this.statusStrip1.Location = new System.Drawing.Point(0, 491);
+      this.statusStrip1.Location = new System.Drawing.Point(0, 381);
       this.statusStrip1.Name = "statusStrip1";
       this.statusStrip1.Size = new System.Drawing.Size(800, 26);
       this.statusStrip1.TabIndex = 1;
@@ -203,29 +204,9 @@ namespace MigrationTool
       this.toolStripStatusLabel1.Size = new System.Drawing.Size(151, 20);
       this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
       // 
-      // migFileLabel
-      // 
-      this.migFileLabel.AutoSize = true;
-      this.migFileLabel.Location = new System.Drawing.Point(12, 54);
-      this.migFileLabel.Name = "migFileLabel";
-      this.migFileLabel.Size = new System.Drawing.Size(101, 20);
-      this.migFileLabel.TabIndex = 2;
-      this.migFileLabel.Text = "Migration File";
-      // 
-      // migFileTextBox
-      // 
-      this.migFileTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-      this.migFileTextBox.ForeColor = System.Drawing.SystemColors.ControlText;
-      this.migFileTextBox.Location = new System.Drawing.Point(119, 51);
-      this.migFileTextBox.Name = "migFileTextBox";
-      this.migFileTextBox.ReadOnly = true;
-      this.migFileTextBox.Size = new System.Drawing.Size(200, 27);
-      this.migFileTextBox.TabIndex = 3;
-      this.migFileTextBox.Text = "Not Loaded";
-      // 
       // logTextBox
       // 
-      this.logTextBox.Location = new System.Drawing.Point(12, 222);
+      this.logTextBox.Location = new System.Drawing.Point(12, 106);
       this.logTextBox.Multiline = true;
       this.logTextBox.Name = "logTextBox";
       this.logTextBox.ReadOnly = true;
@@ -235,7 +216,7 @@ namespace MigrationTool
       // 
       // runProgressBar
       // 
-      this.runProgressBar.Location = new System.Drawing.Point(12, 187);
+      this.runProgressBar.Location = new System.Drawing.Point(12, 71);
       this.runProgressBar.Name = "runProgressBar";
       this.runProgressBar.Size = new System.Drawing.Size(676, 29);
       this.runProgressBar.TabIndex = 5;
@@ -243,7 +224,7 @@ namespace MigrationTool
       // startLabel
       // 
       this.startLabel.AutoSize = true;
-      this.startLabel.Location = new System.Drawing.Point(12, 100);
+      this.startLabel.Location = new System.Drawing.Point(12, 41);
       this.startLabel.Name = "startLabel";
       this.startLabel.Size = new System.Drawing.Size(77, 20);
       this.startLabel.TabIndex = 6;
@@ -251,7 +232,7 @@ namespace MigrationTool
       // 
       // startTextBox
       // 
-      this.startTextBox.Location = new System.Drawing.Point(119, 97);
+      this.startTextBox.Location = new System.Drawing.Point(95, 38);
       this.startTextBox.Name = "startTextBox";
       this.startTextBox.ReadOnly = true;
       this.startTextBox.Size = new System.Drawing.Size(200, 27);
@@ -267,7 +248,7 @@ namespace MigrationTool
       // 
       // cancelButton
       // 
-      this.cancelButton.Location = new System.Drawing.Point(694, 187);
+      this.cancelButton.Location = new System.Drawing.Point(694, 71);
       this.cancelButton.Name = "cancelButton";
       this.cancelButton.Size = new System.Drawing.Size(94, 29);
       this.cancelButton.TabIndex = 8;
@@ -275,108 +256,42 @@ namespace MigrationTool
       this.cancelButton.UseVisualStyleBackColor = true;
       this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
       // 
-      // dbNavLabel
+      // companyOnRunTextBox
       // 
-      this.dbNavLabel.AutoSize = true;
-      this.dbNavLabel.Location = new System.Drawing.Point(383, 54);
-      this.dbNavLabel.Name = "dbNavLabel";
-      this.dbNavLabel.Size = new System.Drawing.Size(62, 20);
-      this.dbNavLabel.TabIndex = 9;
-      this.dbNavLabel.Text = "DB NAV";
+      this.companyOnRunTextBox.Location = new System.Drawing.Point(588, 38);
+      this.companyOnRunTextBox.Name = "companyOnRunTextBox";
+      this.companyOnRunTextBox.ReadOnly = true;
+      this.companyOnRunTextBox.Size = new System.Drawing.Size(200, 27);
+      this.companyOnRunTextBox.TabIndex = 10;
       // 
-      // dbBCLabel
+      // compayLabel
       // 
-      this.dbBCLabel.AutoSize = true;
-      this.dbBCLabel.Location = new System.Drawing.Point(383, 100);
-      this.dbBCLabel.Name = "dbBCLabel";
-      this.dbBCLabel.Size = new System.Drawing.Size(51, 20);
-      this.dbBCLabel.TabIndex = 10;
-      this.dbBCLabel.Text = "DB BC";
+      this.compayLabel.AutoSize = true;
+      this.compayLabel.Location = new System.Drawing.Point(510, 41);
+      this.compayLabel.Name = "compayLabel";
+      this.compayLabel.Size = new System.Drawing.Size(72, 20);
+      this.compayLabel.TabIndex = 9;
+      this.compayLabel.Text = "Company";
       // 
-      // CompaniesLabel
+      // loadNewToolStripMenuItem
       // 
-      this.CompaniesLabel.AutoSize = true;
-      this.CompaniesLabel.Location = new System.Drawing.Point(383, 144);
-      this.CompaniesLabel.Name = "CompaniesLabel";
-      this.CompaniesLabel.Size = new System.Drawing.Size(72, 20);
-      this.CompaniesLabel.TabIndex = 11;
-      this.CompaniesLabel.Text = "Company";
-      // 
-      // dbNavTextBox
-      // 
-      this.dbNavTextBox.Location = new System.Drawing.Point(472, 51);
-      this.dbNavTextBox.Name = "dbNavTextBox";
-      this.dbNavTextBox.Size = new System.Drawing.Size(200, 27);
-      this.dbNavTextBox.TabIndex = 12;
-      // 
-      // dbBCTextBox
-      // 
-      this.dbBCTextBox.Location = new System.Drawing.Point(472, 97);
-      this.dbBCTextBox.Name = "dbBCTextBox";
-      this.dbBCTextBox.Size = new System.Drawing.Size(200, 27);
-      this.dbBCTextBox.TabIndex = 13;
-      // 
-      // companiesTextBox
-      // 
-      this.companiesTextBox.Location = new System.Drawing.Point(472, 141);
-      this.companiesTextBox.Name = "companiesTextBox";
-      this.companiesTextBox.Size = new System.Drawing.Size(200, 27);
-      this.companiesTextBox.TabIndex = 14;
-      // 
-      // connLabel
-      // 
-      this.connLabel.AutoSize = true;
-      this.connLabel.Location = new System.Drawing.Point(12, 144);
-      this.connLabel.Name = "connLabel";
-      this.connLabel.Size = new System.Drawing.Size(84, 20);
-      this.connLabel.TabIndex = 15;
-      this.connLabel.Text = "Connection";
-      // 
-      // connTextBox
-      // 
-      this.connTextBox.Location = new System.Drawing.Point(119, 141);
-      this.connTextBox.Name = "connTextBox";
-      this.connTextBox.Size = new System.Drawing.Size(200, 27);
-      this.connTextBox.TabIndex = 16;
-      // 
-      // onlyCompanyCheckBox
-      // 
-      this.onlyCompanyCheckBox.AutoSize = true;
-      this.onlyCompanyCheckBox.Location = new System.Drawing.Point(694, 99);
-      this.onlyCompanyCheckBox.Name = "onlyCompanyCheckBox";
-      this.onlyCompanyCheckBox.Size = new System.Drawing.Size(153, 24);
-      this.onlyCompanyCheckBox.TabIndex = 18;
-      this.onlyCompanyCheckBox.Text = "Run only company";
-      this.onlyCompanyCheckBox.UseVisualStyleBackColor = true;
-      // 
-      // shrinkStripMenuItem
-      // 
-      this.shrinkStripMenuItem.Name = "shrinkStripMenuItem";
-      this.shrinkStripMenuItem.Size = new System.Drawing.Size(132, 26);
-      this.shrinkStripMenuItem.Text = "&Shrink";
-      this.shrinkStripMenuItem.Click += new System.EventHandler(this.shrinkStripMenuItem_Click);
+      this.loadNewToolStripMenuItem.Name = "loadNewToolStripMenuItem";
+      this.loadNewToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+      this.loadNewToolStripMenuItem.Text = "&Load New";
+      this.loadNewToolStripMenuItem.Click += new System.EventHandler(this.loadNewToolStripMenuItem_Click);
       // 
       // MigrationTool
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(800, 517);
-      this.Controls.Add(this.onlyCompanyCheckBox);
-      this.Controls.Add(this.connTextBox);
-      this.Controls.Add(this.connLabel);
-      this.Controls.Add(this.companiesTextBox);
-      this.Controls.Add(this.dbBCTextBox);
-      this.Controls.Add(this.dbNavTextBox);
-      this.Controls.Add(this.CompaniesLabel);
-      this.Controls.Add(this.dbBCLabel);
-      this.Controls.Add(this.dbNavLabel);
+      this.ClientSize = new System.Drawing.Size(800, 407);
+      this.Controls.Add(this.companyOnRunTextBox);
+      this.Controls.Add(this.compayLabel);
       this.Controls.Add(this.cancelButton);
       this.Controls.Add(this.startTextBox);
       this.Controls.Add(this.startLabel);
       this.Controls.Add(this.runProgressBar);
       this.Controls.Add(this.logTextBox);
-      this.Controls.Add(this.migFileTextBox);
-      this.Controls.Add(this.migFileLabel);
       this.Controls.Add(this.statusStrip1);
       this.Controls.Add(this.menuStrip1);
       this.MainMenuStrip = this.menuStrip1;
@@ -408,8 +323,6 @@ namespace MigrationTool
     private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     private System.Windows.Forms.StatusStrip statusStrip1;
     private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-    private System.Windows.Forms.Label migFileLabel;
-    private System.Windows.Forms.TextBox migFileTextBox;
     private System.Windows.Forms.TextBox logTextBox;
     private System.Windows.Forms.ProgressBar runProgressBar;
     private System.Windows.Forms.Label startLabel;
@@ -419,16 +332,10 @@ namespace MigrationTool
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.ComponentModel.BackgroundWorker runBackgroundWorker;
     private System.Windows.Forms.Button cancelButton;
-    private System.Windows.Forms.Label dbNavLabel;
-    private System.Windows.Forms.Label dbBCLabel;
-    private System.Windows.Forms.Label CompaniesLabel;
-    private System.Windows.Forms.TextBox dbNavTextBox;
-    private System.Windows.Forms.TextBox dbBCTextBox;
-    private System.Windows.Forms.TextBox companiesTextBox;
-    private System.Windows.Forms.Label connLabel;
-    private System.Windows.Forms.TextBox connTextBox;
-    private System.Windows.Forms.CheckBox onlyCompanyCheckBox;
     private System.Windows.Forms.ToolStripMenuItem shrinkStripMenuItem;
+    private System.Windows.Forms.TextBox companyOnRunTextBox;
+    private System.Windows.Forms.Label compayLabel;
+    private System.Windows.Forms.ToolStripMenuItem loadNewToolStripMenuItem;
   }
 }
 

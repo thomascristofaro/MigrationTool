@@ -21,7 +21,7 @@ namespace MigrationTool
     {
       foreach (var query in migCtrl.queries)
       {
-        queryDataGridView.Rows.Add(new object[] { query.id.ToString(), query.type.ToString(), query.table, query.company});
+        queryDataGridView.Rows.Add(new object[] { query.id.ToString(), query.type.ToString(), query.name, query.company});
       }
     }
 

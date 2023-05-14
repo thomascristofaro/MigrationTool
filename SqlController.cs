@@ -40,10 +40,11 @@ namespace MigrationTool
 
     public static void ShrinkFile(string db, string log)
     {
+      if (String.IsNullOrEmpty(log)) return;
       string shrink_query = 
         @"USE {DB};
           DBCC SHRINKFILE({LOG}, 1);";
-      shrink_query = shrink_query.Replace("{DB}", '[' + db + ']');
+      shrink_query = shrink_query.Replace("{DB}", db);
       shrink_query = shrink_query.Replace("{LOG}", log);
 
       SqlCommand cmd = new SqlCommand();

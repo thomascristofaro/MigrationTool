@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace MigrationTool
 {
-  public enum MigrationQueryType { NOT_FOUND, DELETE, UPDATE }
+  public enum MigrationQueryType { CUSTOM, DELETE, UPDATE }
   public class MigrationQuery
   {
     private const string REGEX_COMPANY = @"(?<=\[)(?!.*\[)(.*?)(?=\$)";
@@ -13,44 +13,48 @@ namespace MigrationTool
     public int id { get; set; }
     public bool enabled { get; set; }
     public string query { get; set; }
-    public string table { get; set; }
+    public string name { get; set; }
     public string company { get; set; }
     public bool hasCompany { get; set; }
     public MigrationQueryType type { get; set; }
-
-    private Dictionary<string, string> dollarSystem;
 
     public MigrationQuery(int id)
     {
       this.id = id;
       enabled = true;
       query = "";
-      table = "";
+      name = "Custom " + id;
       company = "";
       hasCompany = false;
-      type = MigrationQueryType.NOT_FOUND;
+      type = MigrationQueryType.CUSTOM;
+    }
 
-      dollarSystem = new Dictionary<string, string>();
+    public static MigrationQuery CreateFromRaw(int id, string rawQuery, string companyPlaceholder, Dictionary<string, string> placeholders)
+    {
+      if (String.IsNullOrEmpty(rawQuery))
+        return null;
+      var dollarSystem = new Dictionary<string, string>();
       dollarSystem.Add("[$systemId]", "[_systemId]");
       dollarSystem.Add("[$systemCreatedAt]", "[_systemCreatedAt]");
       dollarSystem.Add("[$systemCreatedBy]", "[_systemCreatedBy]");
       dollarSystem.Add("[$systemModifiedAt]", "[_systemModifiedAt]");
       dollarSystem.Add("[$systemModifiedBy]", "[_systemModifiedBy]");
-    }
 
-    public static MigrationQuery CreateFromRaw(int id, string rawQuery, string companyPlaceholder, Dictionary<string, string> placeholders)
-    {
       MigrationQuery q = new MigrationQuery(id);
-      q.query = rawQuery;
+      q.query = rawQuery.Trim();
 
-      q.RemoveDollarSystem();
+      foreach (var entry in dollarSystem)
+        q.query = Regex.Replace(q.query, Regex.Escape(entry.Key), entry.Value);
+
       q.CheckCompany();
-      q.RemoveComment();
+      q.query = q.RemoveComment(q.query);
       if (q.query.Length <= 0)
         return null;
       q.SetTableAndTypeFromQuery();
-      q.ReplacePlaceholders(companyPlaceholder, placeholders);
-      q.InsertDollarSystem();
+      q.RawReplacePlaceholders(companyPlaceholder, placeholders);
+
+      foreach (var entry in dollarSystem)
+        q.query = Regex.Replace(q.query, Regex.Escape(entry.Value), entry.Key);
 
       return q;
     }
@@ -72,10 +76,9 @@ namespace MigrationTool
         company = m.Value;
       }
     }
-    private void RemoveComment()
+    private string RemoveComment(string querytoEdit)
     {
-      query = Regex.Replace(query, @"(--).+", "");
-      query = query.Trim();
+      return Regex.Replace(querytoEdit, @"(--).+", "").Trim();
     }
 
     public void SetTableAndTypeFromQuery()
@@ -99,11 +102,11 @@ namespace MigrationTool
         if (i1 != first.LastIndexOf('$'))
           first = first.Substring(i1 + 1);
 
-        table = first;
+        name = first;
       }
     }
 
-    private void ReplacePlaceholders(string companyPlaceholder, Dictionary<string, string> placeholders)
+    private void RawReplacePlaceholders(string companyPlaceholder, Dictionary<string, string> placeholders)
     {
       if (hasCompany)
         query = Regex.Replace(query, REGEX_COMPANY, companyPlaceholder);
@@ -117,59 +120,82 @@ namespace MigrationTool
       }
     }
 
-    private void RemoveDollarSystem()
+    public void InitializeQuery(string newQuery)
     {
-      foreach (var entry in dollarSystem)
-        query = Regex.Replace(query, Regex.Escape(entry.Key), entry.Value);
-    }
-
-    private void InsertDollarSystem()
-    {
-      foreach (var entry in dollarSystem)
-        query = Regex.Replace(query, Regex.Escape(entry.Value), entry.Key);
-    }
-
-    public void Execute(string dbNAV, string dbBC, string company, bool runOnlyCompany)
-    {
-      if (runOnlyCompany && !hasCompany)
-      {
-        MigrationLog.Write("SKIP   : NOT COMPANY - " + NameForLog());
-        return;
-      }
-
-      if (this.company != "" && company != this.company)
-      {
-        MigrationLog.Write("SKIP   : COMPANY - " + this.company + NameForLog());
-        return;
-      }
-      MigrationLog.Write("EXECUTE: " + NameForLog(company));
+      string queryBuilder = newQuery.Trim();
+      if (String.IsNullOrEmpty(queryBuilder))
+        throw new Exception("Empty query");
       
-      var q = query.Replace("{DB_BC}", '[' + dbBC+ ']');
-      q = q.Replace("{DB_NAV}", '[' + dbNAV + ']');
-      q = q.Replace("{COMPANY}", company);
+      Match m = Regex.Match(queryBuilder, @"(?<=-\@\@\@Name: ).*");
+      if (!m.Success)
+        throw new Exception("Name not found");
+      name = m.Value.Trim();
+
+      m = Regex.Match(queryBuilder, @"(?<=-\@\@\@RunOnCompany: ).*");
+      if (m.Success)
+        company = m.Value.Trim();
+
+      queryBuilder = RemoveComment(queryBuilder);
+      if (String.IsNullOrEmpty(queryBuilder))
+        throw new Exception("Empty query");
+      
+      hasCompany = Regex.IsMatch(queryBuilder, Regex.Escape(AppSettingsHelper.Config.PlaceholderCompany));
+      query = queryBuilder;
+    }
+
+    public void Execute(bool runQueryOnlyWithCompany, string companyOnRun)
+    {
+      if (runQueryOnlyWithCompany && !hasCompany)
+      {
+        MigrationLog.Write("SKIP   : QUERY WITHOUT COMPANY - " + NameForLog());
+        return;
+      }
+
+      if (!String.IsNullOrEmpty(this.company) && companyOnRun != this.company)
+      {
+        MigrationLog.Write("SKIP   : COMPANY " + companyOnRun + " QUERY - " + NameForLog(this.company));
+        return;
+      }
+      MigrationLog.Write("EXECUTE: " + NameForLog(companyOnRun));
+      
+      var q = query.Replace(AppSettingsHelper.Config.PlaceholderDBBC, AppSettingsHelper.Config.DBBC);
+      q = q.Replace(AppSettingsHelper.Config.PlaceholderDBNAV, AppSettingsHelper.Config.DBNAV);
+      q = q.Replace(AppSettingsHelper.Config.PlaceholderCompany, companyOnRun);
 
       int row_affected;
       try
       {
         row_affected = SqlController.RunQuery(q);
-        SqlController.ShrinkFile(dbBC, "Propagroup_log");
+        SqlController.ShrinkFile(AppSettingsHelper.Config.PlaceholderDBBC, AppSettingsHelper.Config.LogToShrink);
       }
       catch (Exception ex)
       {
-        MigrationLog.Write("ERRORE : " + NameForLog(company) + " - " + ex.Message);
+        MigrationLog.Write("ERRORE : " + NameForLog(companyOnRun) + " - " + ex.Message);
+        MigrationLog.Write(q);
         return;
       }
       
-      MigrationLog.Write("DONE   : " + NameForLog(company) + " " + 
+      MigrationLog.Write("DONE   : " + NameForLog(companyOnRun) + " " + 
         row_affected.ToString() + " row affected");
     }
 
     private string NameForLog(string company="")
     {
       if (company != "" && hasCompany)
-        return id + " - " + company + "$" + table;
+        return id + " - " + company + " - " + name;
       else
-        return id + " - " + table;
+        return id + " - " + name;
+    }
+
+    public override string ToString()
+    {
+      string toString = @"--@@@ID: " + id + Environment.NewLine;
+      if (!String.IsNullOrEmpty(name))
+        toString += @"--@@@Name: " + name + Environment.NewLine;
+      if (!String.IsNullOrEmpty(company))
+        toString += @"--@@@RunOnCompany: " + company + Environment.NewLine;
+      toString += query;
+      return toString;
     }
   }
 }
