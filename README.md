@@ -1,2 +1,2 @@
 # MigrationTool
-Tool for database migration for my job 
+Tool for run query in sequence
