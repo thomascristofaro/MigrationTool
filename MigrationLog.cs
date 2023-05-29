@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -8,12 +9,8 @@ namespace MigrationTool
   class MigrationLog
   {
     private delegate void WriteLog(string text);
-    private static TextBox logTextBox = null;
-
-    public static void SetTextBox(TextBox formTextBox)
-    {
-      logTextBox = formTextBox;
-    }
+    public static TextBox logTextBox { get; set; }
+    public static string fileName { get; set; }
 
     public static void Write(string text)
     {
@@ -23,6 +20,7 @@ namespace MigrationTool
           logTextBox.Invoke(new WriteLog(AppendToTextBox), text);
         else
           AppendToTextBox(text);
+        AppendToFile(text);
       });
       thread.Start();
     }
@@ -31,6 +29,11 @@ namespace MigrationTool
     {
       logTextBox.AppendText(text);
       logTextBox.AppendText(Environment.NewLine);
+    }
+    private static void AppendToFile(string text)
+    {
+      if (!String.IsNullOrEmpty(fileName))
+        File.AppendAllText(fileName, text + Environment.NewLine);
     }
 
     public static void Clear()

@@ -18,7 +18,8 @@ namespace MigrationTool
     }
     private void MigrationTool_Load(object sender, EventArgs e)
     {
-      MigrationLog.SetTextBox(this.logTextBox);
+      MigrationLog.logTextBox = this.logTextBox;
+      MigrationLog.fileName = "LOG_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
       try
       {
         AppSettingsHelper.LoadFromFile();
@@ -28,14 +29,6 @@ namespace MigrationTool
       {
         MigrationLog.ShowError("AppSettings.json not loaded: " + ex.Message);
       }
-    }
-
-    private void loadToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      OpenFileDialog open = new OpenFileDialog();
-      open.Filter = "Sql|*.sql";
-      if (open.ShowDialog() == DialogResult.OK)
-        migCtrl.LoadMigrationFile(open.FileName);
     }
 
     private void loadNewToolStripMenuItem_Click(object sender, EventArgs e)

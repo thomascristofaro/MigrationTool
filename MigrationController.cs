@@ -17,34 +17,6 @@ namespace MigrationTool
       queries = new List<MigrationQuery>();
     }
 
-    public void LoadMigrationFile(string path)
-    {
-      var placeholders = new Dictionary<string, string>();
-      placeholders.Add("PropagroupOperations.", "{DB_BC}.");
-      placeholders.Add("PROPACK_attuale.", "{DB_NAV}.");
-      placeholders.Add("[Propack_attuale]", "{DB_NAV}");
-      placeholders.Add("[PropagroupOperations]", "{DB_BC}");
-
-      int idCounter = 1;
-      queries.Clear();
-      MigrationLog.Write("Loading migration file: " + path);
-      string readText = File.ReadAllText(path);
-      string[] rawQueries = Regex.Split(readText, AppSettingsHelper.Config.TagSplit, RegexOptions.IgnoreCase);
-      
-      foreach (var rawQuery in rawQueries)
-      {
-        var rawQueryTrimmed = rawQuery.Trim();
-        if (rawQueryTrimmed.Length > 0)
-        {
-          var q = MigrationQuery.CreateFromRaw(idCounter++, rawQueryTrimmed, AppSettingsHelper.Config.PlaceholderCompany, placeholders);
-          if (q != null) queries.Add(q);
-          else idCounter--;
-        }
-      }
-      MigrationLog.Write("Migration file loaded");
-      MigrationLog.Write("There are " + queries.Count.ToString() + " queries");
-    }
-
     public void LoadMigrationFileNew(string path)
     {
       int idCounter = 1;

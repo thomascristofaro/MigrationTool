@@ -206,6 +206,7 @@ namespace MigrationTool
       this.runOnlyCompanyCheckBox.TabIndex = 34;
       this.runOnlyCompanyCheckBox.Text = "Run query only with company";
       this.runOnlyCompanyCheckBox.UseVisualStyleBackColor = true;
+      this.runOnlyCompanyCheckBox.CheckedChanged += new System.EventHandler(this.runOnlyCompanyCheckBox_CheckedChanged);
       // 
       // logToShrinkTextBox
       // 

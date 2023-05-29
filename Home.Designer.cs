@@ -31,7 +31,7 @@ namespace MigrationTool
     {
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.loadNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
       this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,7 +55,6 @@ namespace MigrationTool
       this.cancelButton = new System.Windows.Forms.Button();
       this.companyOnRunTextBox = new System.Windows.Forms.TextBox();
       this.compayLabel = new System.Windows.Forms.Label();
-      this.loadNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip1.SuspendLayout();
       this.statusStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -77,7 +76,6 @@ namespace MigrationTool
       // fileToolStripMenuItem
       // 
       this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadToolStripMenuItem,
             this.loadNewToolStripMenuItem,
             this.exportToolStripMenuItem,
             this.toolStripSeparator,
@@ -86,31 +84,30 @@ namespace MigrationTool
       this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
       this.fileToolStripMenuItem.Text = "&File";
       // 
-      // loadToolStripMenuItem
+      // loadNewToolStripMenuItem
       // 
-      this.loadToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-      this.loadToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
-      this.loadToolStripMenuItem.Text = "&Load";
-      this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+      this.loadNewToolStripMenuItem.Name = "loadNewToolStripMenuItem";
+      this.loadNewToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+      this.loadNewToolStripMenuItem.Text = "&Load";
+      this.loadNewToolStripMenuItem.Click += new System.EventHandler(this.loadNewToolStripMenuItem_Click);
       // 
       // exportToolStripMenuItem
       // 
       this.exportToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-      this.exportToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+      this.exportToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
       this.exportToolStripMenuItem.Text = "&Export";
       this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
       // 
       // toolStripSeparator
       // 
       this.toolStripSeparator.Name = "toolStripSeparator";
-      this.toolStripSeparator.Size = new System.Drawing.Size(156, 6);
+      this.toolStripSeparator.Size = new System.Drawing.Size(132, 6);
       // 
       // exitToolStripMenuItem
       // 
       this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-      this.exitToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+      this.exitToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
       this.exitToolStripMenuItem.Text = "E&xit";
       // 
       // editToolStripMenuItem
@@ -273,13 +270,6 @@ namespace MigrationTool
       this.compayLabel.TabIndex = 9;
       this.compayLabel.Text = "Company";
       // 
-      // loadNewToolStripMenuItem
-      // 
-      this.loadNewToolStripMenuItem.Name = "loadNewToolStripMenuItem";
-      this.loadNewToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
-      this.loadNewToolStripMenuItem.Text = "&Load New";
-      this.loadNewToolStripMenuItem.Click += new System.EventHandler(this.loadNewToolStripMenuItem_Click);
-      // 
       // MigrationTool
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -311,7 +301,6 @@ namespace MigrationTool
 
     private System.Windows.Forms.MenuStrip menuStrip1;
     private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
     private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;

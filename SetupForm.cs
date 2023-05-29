@@ -38,6 +38,12 @@ namespace MigrationTool
       this.placeholderBCTextBox.Text = AppSettingsHelper.Config.PlaceholderDBBC; 
       this.tagSplitTextBox.Text = AppSettingsHelper.Config.TagSplit;
       this.logToShrinkTextBox.Text = AppSettingsHelper.Config.LogToShrink;
+      this.runOnlyCompanyCheckBox.Checked = AppSettingsHelper.RunQueryOnlyWithCompany;
+    }
+
+    private void runOnlyCompanyCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+      AppSettingsHelper.RunQueryOnlyWithCompany = runOnlyCompanyCheckBox.Checked;
     }
   }
 }
